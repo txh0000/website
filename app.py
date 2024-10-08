@@ -1,3 +1,4 @@
+import os
 from flask import Flask, render_template, send_file
 import pandas as pd
 
@@ -37,4 +38,5 @@ def download():
     return send_file('table1.csv', as_attachment=True)
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host='0.0.0.0', port=port)
