@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Processed Tables</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/css/bootstrap.min.css">
+    <style>
+        .table {
+            width: auto;
+            margin-bottom: 1rem;
+            border-collapse: collapse;
+        }
+        .table th, .table td {
+            padding: 0.5rem;
+            border: 1px solid #dee2e6;
+        }
+        .table tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        .value-cell, .value-header {
+            text-align: right;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <h1>Processed Tables</h1>
+        <p>Click <a href="/download">here</a> to download Table 1 (CSV).</p>
+        
+        <h2 class="mt-4">Table 1</h2>
+        <div id="table1-container"></div>
+
+        <h2 class="mt-5">Table 2</h2>
+        <div id="table2-container">
+            {{ table2|safe }}
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const csvData = {{ csv_data|tojson|safe }};
+            const rows = csvData.split('\n');
+            const table = document.createElement('table');
+            table.className = 'table';
+
+            // Create header row
+            const headerRow = table.insertRow();
+            const indexHeader = headerRow.insertCell(0);
+            const valueHeader = headerRow.insertCell(1);
+            indexHeader.textContent = 'Index #';
+            valueHeader.textContent = 'Value';
+            indexHeader.style.fontWeight = 'bold';
+            valueHeader.style.fontWeight = 'bold';
+            valueHeader.className = 'value-header';
+
+            // Create data rows
+            rows.slice(1).forEach((row) => {
+                const [indexNum, value] = row.split(',');
+                const tr = table.insertRow();
+                const cell1 = tr.insertCell(0);
+                const cell2 = tr.insertCell(1);
+                cell1.textContent = indexNum;
+                cell2.textContent = value;
+                cell2.className = 'value-cell';
+            });
+
+            document.getElementById('table1-container').appendChild(table);
+        });
+    </script>
+</body>
+</html>
